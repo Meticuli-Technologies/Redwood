@@ -5,9 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -114,6 +112,26 @@ public class TreeView implements Initializable {
         return new Lesson(name, description, pres, subs, pages);
     }
 
+    private String loadDescription(Document document) {
+        List<String> lines = new ArrayList<>();
+
+        if (document.getElementsByTagName("desc") != null) {
+            loadList(lines, document, "desc");
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                builder.append(line);
+
+                if (i != lines.size() - 1) {
+                    builder.append("\n");
+                }
+            }
+            return builder.toString();
+        } else {
+            return "No description was found for this lesson.";
+        }
+    }
+
     private void loadList(List<String> toStore, Document document, String name) {
         NodeList nodeList = document.getElementsByTagName(name);
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -136,25 +154,6 @@ public class TreeView implements Initializable {
         content.setMinSize(width, height);
         scrollPane.setHvalue(scrollPane.getHmin());
         scrollPane.setVvalue(scrollPane.getVmin());
-    }
-
-    private String loadDescription(Document document) {
-        List<String> lines = new ArrayList<>();
-
-        if (document.getElementsByTagName("desc") != null) {
-            loadList(lines, document, "desc");
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i);
-                builder.append(line);
-
-                if (i != lines.size() - 1) {
-                    builder.append("\n");
-                }
-            }
-            return builder.toString();
-        } else {
-            return "No description was found for this lesson.";
-        }
+        scrollPane.setPannable(true);
     }
 }
