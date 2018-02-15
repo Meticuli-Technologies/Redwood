@@ -38,24 +38,20 @@ public class TreeView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setUpContent();
-
-        List<Lesson> lessons = new ArrayList<>();
-        Path path = Paths.get(".\\lessons");
         try {
-            List<Path> mainPaths = Files.
-                    walk(path).
-                    filter(path1 -> path1.toString().contains("main")).
-                    collect(Collectors.toList());
-            for (Path mainPath : mainPaths) {
-                lessons.add(loadMain(mainPath));
-            }
-        } catch (IOException | SAXException | ParserConfigurationException e) {
+            loadContent();
+
+            List<Lesson> lessons = loadLessons();
+            loadComponents(lessons);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void loadComponents(List<Lesson> lessons) {
         for (Lesson lesson : lessons) {
             TitledPane titledPane = new TitledPane();
+            titledPane.setText(lesson.getName());
             titledPane.setTranslateX(width / 2);
             titledPane.setTranslateY(height / 2);
             titledPane.setPrefSize(100, 100);
@@ -63,12 +59,19 @@ public class TreeView implements Initializable {
         }
     }
 
-    private void setUpContent() {
-        width = 1000;
-        height = 1000;
-        content.setMinSize(width, height);
-        scrollPane.setHvalue(scrollPane.getHmin());
-        scrollPane.setVvalue(scrollPane.getVmin());
+    private List<Lesson> loadLessons() throws Exception {
+        List<Lesson> lessons = new ArrayList<>();
+        Path path = Paths.get(".\\lessons");
+        List<Path> mainPaths = Files.
+                walk(path).
+                filter(path1 -> path1.toString().contains("main")).
+                collect(Collectors.toList());
+
+        for (Path mainPath : mainPaths) {
+            lessons.add(loadMain(mainPath));
+        }
+
+        return lessons;
     }
 
     private Lesson loadMain(Path mainPath) throws IOException, ParserConfigurationException, SAXException {
@@ -83,56 +86,40 @@ public class TreeView implements Initializable {
         Document document = builder.parse(Files.newInputStream(mainPath));
         document.getDocumentElement().normalize();
 
-        NodeList preList = document.getElementsByTagName("preList");
-        for (int i = 0; i < preList.getLength(); i++) {
-            Node node = preList.item(i);
+        String name = ((Element) document.getElementsByTagName("name").item(0)).getAttribute("value");
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                String content = element.getTextContent();
-                List<String> contentList = new ArrayList<>();
-                Arrays.stream(content.split(" "))
-                        .filter(s -> !s.trim().equals(""))
-                        .collect(Collectors.toList())
-                        .forEach(s -> contentList.add(s.trim().replace("\n", "")));
-                pres.addAll(contentList);
-            }
-        }
-
-        NodeList subList = document.getElementsByTagName("subList");
-        for (int i = 0; i < subList.getLength(); i++) {
-            Node node = subList.item(i);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                String content = element.getTextContent();
-                List<String> contentList = new ArrayList<>();
-                Arrays.stream(content.split(" "))
-                        .filter(s -> !s.trim().equals(""))
-                        .collect(Collectors.toList())
-                        .forEach(s -> contentList.add(s.trim().replace("\n", "")));
-                subs.addAll(contentList);
-            }
-        }
-
-        NodeList pageList = document.getElementsByTagName("page");
-        for (int i = 0; i < pageList.getLength(); i++) {
-            Node node = pageList.item(i);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                String content = element.getTextContent();
-                List<String> contentList = new ArrayList<>();
-                Arrays.stream(content.split(" "))
-                        .filter(s -> !s.trim().equals(""))
-                        .collect(Collectors.toList())
-                        .forEach(s -> contentList.add(s.trim().replace("\n", "")));
-                pages.addAll(contentList);
-            }
-        }
+        loadPres(pres, document, "preList");
+        loadPres(subs, document, "subList");
+        loadPres(pages, document, "page");
 
         reader.close();
 
-        return new Lesson(pres, subs, pages);
+        return new Lesson(name, pres, subs, pages);
+    }
+
+    private void loadPres(List<String> toStore, Document document, String name) {
+        NodeList nodeList = document.getElementsByTagName(name);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                String content = element.getTextContent();
+                List<String> contentList = new ArrayList<>();
+                Arrays.stream(content.split(" "))
+                        .filter(s -> !s.trim().equals(""))
+                        .collect(Collectors.toList())
+                        .forEach(s -> contentList.add(s.trim().replace("\n", "")));
+                toStore.addAll(contentList);
+            }
+        }
+    }
+
+    private void loadContent() {
+        width = 1000;
+        height = 1000;
+        content.setMinSize(width, height);
+        scrollPane.setHvalue(scrollPane.getHmin());
+        scrollPane.setVvalue(scrollPane.getVmin());
     }
 }
