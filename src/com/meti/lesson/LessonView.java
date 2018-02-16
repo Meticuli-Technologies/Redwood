@@ -1,5 +1,8 @@
 package com.meti.lesson;
 
+import java.nio.file.Path;
+import java.util.List;
+
 /**
  * @author SirMathhman
  * @version 0.0.0
@@ -8,6 +11,6 @@ package com.meti.lesson;
 public class LessonView {
 
     public void loadLesson(Lesson lesson) {
-
+        List<Path> paths = lesson.convertPagesToPaths();
     }
 }

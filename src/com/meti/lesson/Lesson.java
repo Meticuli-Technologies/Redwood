@@ -1,5 +1,8 @@
 package com.meti.lesson;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,5 +43,11 @@ public class Lesson {
 
     public List<String> getPages() {
         return pages;
+    }
+
+    public List<Path> convertPagesToPaths() {
+        List<Path> pathList = new ArrayList<>();
+        pages.forEach(s -> pathList.add(Paths.get(".\\" + s)));
+        return pathList;
     }
 }
