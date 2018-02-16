@@ -1,4 +1,4 @@
-package com.meti;
+package com.meti.lesson;
 
 import java.util.List;
 
