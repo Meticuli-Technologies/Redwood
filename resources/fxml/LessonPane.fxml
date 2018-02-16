@@ -23,7 +23,7 @@
             </ScrollPane>
          </center>
          <bottom>
-            <Button mnemonicParsing="false" prefWidth="200.0" text="Start" BorderPane.alignment="CENTER">
+            <Button fx:id="start" mnemonicParsing="false" onAction="#start" prefWidth="200.0" text="Start" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets top="10.0" />
                </BorderPane.margin>
