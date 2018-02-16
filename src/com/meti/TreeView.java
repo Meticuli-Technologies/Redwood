@@ -3,11 +3,14 @@ package com.meti;
 import com.meti.lesson.Lesson;
 import com.meti.lesson.LessonFactory;
 import com.meti.lesson.LessonPane;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -61,6 +64,8 @@ public class TreeView implements Initializable {
             Parent parent = loader.load();
             parent.setTranslateX(i * 300 + 100);
             parent.setTranslateY(500);
+            parent.setOnMouseClicked(new LessonOpener());
+
             ((LessonPane) loader.getController()).loadLesson(lesson);
             content.getChildren().add(parent);
         }
@@ -86,5 +91,12 @@ public class TreeView implements Initializable {
         scrollPane.setHvalue(scrollPane.getHmin());
         scrollPane.setVvalue(scrollPane.getVmin());
         scrollPane.setPannable(true);
+    }
+
+    private class LessonOpener implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+
+        }
     }
 }
