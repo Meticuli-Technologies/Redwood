@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 public class Main extends Application {
     private URL treeViewFXML;
 
-
     public Main() {
         try {
             treeViewFXML = Paths.get(".\\resources\\fxml\\TreeView.fxml").toUri().toURL();
