@@ -64,7 +64,6 @@ public class TreeView implements Initializable {
             Parent parent = loader.load();
             parent.setTranslateX(i * 300 + 100);
             parent.setTranslateY(500);
-            parent.setOnMouseClicked(new LessonOpener());
 
             ((LessonPane) loader.getController()).loadLesson(lesson);
             content.getChildren().add(parent);
@@ -91,12 +90,5 @@ public class TreeView implements Initializable {
         scrollPane.setHvalue(scrollPane.getHmin());
         scrollPane.setVvalue(scrollPane.getVmin());
         scrollPane.setPannable(true);
-    }
-
-    private class LessonOpener implements EventHandler<MouseEvent> {
-        @Override
-        public void handle(MouseEvent event) {
-
-        }
     }
 }

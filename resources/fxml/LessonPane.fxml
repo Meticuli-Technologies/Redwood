@@ -16,7 +16,7 @@
                <content>
                   <AnchorPane>
                      <children>
-                        <TextArea fx:id="descriptionArea" prefWidth="200.0" />
+                        <TextArea fx:id="descriptionArea" editable="false" prefWidth="200.0" />
                      </children>
                   </AnchorPane>
                </content>
