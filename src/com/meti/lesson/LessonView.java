@@ -25,6 +25,7 @@ public class LessonView {
 
     @FXML
     private AnchorPane contentPane;
+    private Lesson lesson;
 
     @FXML
     public void back() {
@@ -39,7 +40,7 @@ public class LessonView {
         currentPage = pageIndex;
         Path path = pagePaths.get(pageIndex);
 
-        String[] nameArgs = path.getName(path.getNameCount() - 1).toString().split(".");
+        String[] nameArgs = path.getName(path.getNameCount() - 1).toString().split("\\.");
         String extension = nameArgs[nameArgs.length - 1];
 
         ObservableList<Node> children = contentPane.getChildren();
@@ -49,7 +50,7 @@ public class LessonView {
                 TextArea area = new TextArea();
                 area.setEditable(false);
 
-                BufferedReader reader = Files.newBufferedReader(path);
+                BufferedReader reader = Files.newBufferedReader(lesson.getLocation().resolveSibling(path));
                 List<String> lines = new ArrayList<>();
 
                 String line;
@@ -85,7 +86,9 @@ public class LessonView {
     }
 
     public void loadLesson(Lesson lesson) throws IOException {
-        pagePaths = lesson.convertPagesToPaths();
+        this.lesson = lesson;
+        this.pagePaths = lesson.convertPagesToPaths();
+
         if (pagePaths.size() == 0) {
             throw new IllegalArgumentException("Not enough paths specified, no content found!");
         }

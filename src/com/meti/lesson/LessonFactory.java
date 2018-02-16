@@ -45,7 +45,7 @@ public class LessonFactory {
 
         reader.close();
 
-        return new Lesson(name, description, pres, subs, pages);
+        return new Lesson(mainPath, name, description, pres, subs, pages);
     }
 
     public static String loadDescription(Document document) {
